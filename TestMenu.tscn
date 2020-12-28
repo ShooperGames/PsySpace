@@ -1,0 +1,76 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://HSMBut.gd" type="Script" id=1]
+[ext_resource path="res://TestMenu.gd" type="Script" id=2]
+[ext_resource path="res://LineEdit.gd" type="Script" id=3]
+[ext_resource path="res://DiffEdit.gd" type="Script" id=4]
+[ext_resource path="res://SightEdit.gd" type="Script" id=5]
+
+[node name="TestMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -384.0
+margin_bottom = -120.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+margin_right = 640.0
+margin_bottom = 480.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GridContainer" type="GridContainer" parent="CenterContainer"]
+margin_left = 259.0
+margin_top = 161.0
+margin_right = 380.0
+margin_bottom = 319.0
+
+[node name="HSMBut" type="Button" parent="CenterContainer/GridContainer"]
+margin_right = 121.0
+margin_bottom = 20.0
+text = "HyperSpaceMaze"
+script = ExtResource( 1 )
+
+[node name="MomLab" type="Label" parent="CenterContainer/GridContainer"]
+margin_top = 24.0
+margin_right = 121.0
+margin_bottom = 38.0
+
+[node name="MomEdit" type="LineEdit" parent="CenterContainer/GridContainer"]
+margin_top = 42.0
+margin_right = 121.0
+margin_bottom = 66.0
+placeholder_text = "Enter New HSM Here"
+script = ExtResource( 3 )
+
+[node name="DiffLab" type="Label" parent="CenterContainer/GridContainer"]
+margin_top = 70.0
+margin_right = 121.0
+margin_bottom = 84.0
+
+[node name="DiffEdit" type="LineEdit" parent="CenterContainer/GridContainer"]
+margin_top = 88.0
+margin_right = 121.0
+margin_bottom = 112.0
+script = ExtResource( 4 )
+
+[node name="SightLab" type="Label" parent="CenterContainer/GridContainer"]
+margin_top = 116.0
+margin_right = 121.0
+margin_bottom = 130.0
+
+[node name="SightEdit" type="LineEdit" parent="CenterContainer/GridContainer"]
+margin_top = 134.0
+margin_right = 121.0
+margin_bottom = 158.0
+script = ExtResource( 5 )
+[connection signal="text_changed" from="CenterContainer/GridContainer/MomEdit" to="CenterContainer/GridContainer/MomEdit" method="_on_LineEdit_text_changed"]
+[connection signal="text_entered" from="CenterContainer/GridContainer/MomEdit" to="." method="_on_LineEdit_text_entered"]
+[connection signal="text_changed" from="CenterContainer/GridContainer/DiffEdit" to="CenterContainer/GridContainer/DiffEdit" method="_on_DiffEdit_text_changed"]
+[connection signal="text_entered" from="CenterContainer/GridContainer/DiffEdit" to="." method="_on_DiffEdit_text_entered"]
+[connection signal="text_changed" from="CenterContainer/GridContainer/SightEdit" to="CenterContainer/GridContainer/SightEdit" method="_on_SightEdit_text_changed"]
+[connection signal="text_entered" from="CenterContainer/GridContainer/SightEdit" to="." method="_on_SightEdit_text_entered"]

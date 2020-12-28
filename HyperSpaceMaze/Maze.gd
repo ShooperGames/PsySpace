@@ -4,12 +4,16 @@ extends Node2D
 var hWalls = []
 var vWalls = []
 var cells = []
-var sight = 1 # At some point this will be based on character skill
+export var sight = 1# At some point this will be based on character skill
 var rng = RandomNumberGenerator.new()
-var mazeDem = 10 #Pass in a value for this for 'difficulty'
-
+export var mazeDem = 10#Pass in a value for this for 'difficulty'
+var hsmomentum
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	sight = Global.player.skills['Sight']
+	mazeDem = Global.hsd
+	hsmomentum = Global.hsm
+	$TileMap/Ship/MomLab.text = hsmomentum as String
 	rng.randomize()
 	var wallCounter = 0
 	var cellCounter = 0
@@ -129,24 +133,48 @@ func _ready():
 				$TileMap.set_cell(x,y,11)
 
 func reDraw(): #pass in x and y, and make this smarter
+	hsmomentum -= 1
+	if hsmomentum <= 0:
+		get_tree().change_scene("res://TestMenu.tscn")
+		Global.hsm = hsmomentum
+	if $TileMap/Ship.loc.x == 4 and $TileMap/Ship.loc.y == 4:
+		get_tree().change_scene("res://TestMenu.tscn")
+		Global.hsm = hsmomentum
 	for x in range(mazeDem):
 		for y in range(mazeDem):
 			if $TileMap.get_cell(x,y) == 11 and abs($TileMap/Ship.loc.x - x) <= sight and abs($TileMap/Ship.loc.y - y) <= sight:
 				$TileMap.set_cell(x,y,cells[x][y])
+	$TileMap/Ship/MomLab.text = hsmomentum as String
+	$TileMap/Ship.position.x = $TileMap/Ship.loc.x * 64 + 12
+	$TileMap/Ship.position.y = $TileMap/Ship.loc.y * 64 + 12
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	if Input.is_action_just_pressed("ui_left") and $TileMap/Ship.loc.x > 0 and not vWalls[$TileMap/Ship.loc.y][$TileMap/Ship.loc.x - 1]:
 		$TileMap/Ship.loc.x -= 1
+		$TileMap/Ship/TextureRect.set_texture($TileMap/Ship.rightTexture)
+		$TileMap/Ship/TextureRect.flip_h = true
+		$TileMap/Ship/MomLab.rect_position = Vector2(15, 0)
+		$TileMap/Ship/MomLab.rect_size = Vector2(17, 40)
 		reDraw()
 	if Input.is_action_just_pressed("ui_right") and $TileMap/Ship.loc.x < mazeDem-1 and not vWalls[$TileMap/Ship.loc.y][$TileMap/Ship.loc.x]:
 		$TileMap/Ship.loc.x += 1
+		$TileMap/Ship/TextureRect.set_texture($TileMap/Ship.rightTexture)
+		$TileMap/Ship/TextureRect.flip_h = false
+		$TileMap/Ship/MomLab.rect_position = Vector2(7, 0)
+		$TileMap/Ship/MomLab.rect_size = Vector2(17, 40)
 		reDraw()
 	if Input.is_action_just_pressed("ui_up") and $TileMap/Ship.loc.y > 0 and not hWalls[$TileMap/Ship.loc.y - 1][$TileMap/Ship.loc.x]:
 		$TileMap/Ship.loc.y -= 1
+		$TileMap/Ship/TextureRect.set_texture($TileMap/Ship.upTexture)
+		$TileMap/Ship/TextureRect.flip_v = false
+		$TileMap/Ship/MomLab.rect_position = Vector2(0, 17)
+		$TileMap/Ship/MomLab.rect_size = Vector2(40, 14)
 		reDraw()
 	if Input.is_action_just_pressed("ui_down") and $TileMap/Ship.loc.y < mazeDem-1 and not hWalls[$TileMap/Ship.loc.y][$TileMap/Ship.loc.x]:
 		$TileMap/Ship.loc.y += 1
+		$TileMap/Ship/TextureRect.set_texture($TileMap/Ship.upTexture)
+		$TileMap/Ship/TextureRect.flip_v = true
+		$TileMap/Ship/MomLab.rect_position = Vector2(0, 9)
+		$TileMap/Ship/MomLab.rect_size = Vector2(40, 14)
 		reDraw()
-	$TileMap/Ship.position.x = $TileMap/Ship.loc.x * 64 + 12
-	$TileMap/Ship.position.y = $TileMap/Ship.loc.y * 64 + 12
